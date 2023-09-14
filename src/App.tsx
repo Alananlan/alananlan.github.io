@@ -30,7 +30,6 @@ const App = () => {
     <div className="App">
       <Navbar />
       <Socials />
-
         <Background orientation={orientation_prop}/>
         <div className="second-background">
             {/* <About /> */}
