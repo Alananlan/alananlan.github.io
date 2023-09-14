@@ -1,0 +1,155 @@
+@font-face {
+  font-family: 'Jua', sans-serif;
+  src: local('Jua'), url(./fonts/Jua-Regular.ttf) format('truetype');
+}
+
+/* Add media queries for different screen sizes */
+@media screen and (max-width: 767px) {
+  .greeting-text {
+    font-size: 2em;
+  }
+
+  .caption-text-0 {
+    font-size: 0.75em;
+  }
+
+  .profile-image {
+    width: 100px;
+    height: 100px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .greeting-text {
+    font-size: 4em;
+  }
+
+  .caption-text-0 {
+    font-size: 1em;
+  }
+
+  .profile-image {
+    width: 300px;
+    height: 300px;
+  }
+}
+
+@media screen and (min-width: 1366px) {
+  .greeting-text {
+    font-size: 6em;
+  }
+
+  .caption-text-0 {
+    font-size: 2em;
+  }
+
+  .profile-image {
+    width: 400px;
+    height: 400px;
+  }
+}
+
+.App {
+  display: flex;
+  text-align: center;
+  background-color: black;
+  flex-direction: column;
+  
+}
+
+.image-container {
+  position: relative;
+}
+
+.responsive-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(1.7);
+  /* filter: brightness(65%); */
+  opacity: 0.8;
+  z-index: 0; /* Ensure the image is behind the overlay */
+}
+
+.second-background {
+  background-color: black;
+  width: 100%;
+  height: 1440px;
+
+}
+
+.center-container {
+  /* background-color: grey; */
+  display: flex;
+  flex-direction: row;
+  column-gap: 2em;
+  position: absolute;
+  height: 50vh;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* This centers the div both horizontally and vertically */
+  justify-content: space-between;
+  align-items: center;
+  z-index: 1; /* Ensure the image is behind the overlay */
+}
+
+.center-container-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.greeting-text {
+  color: #E0CA00;
+  text-align: left;
+  font-family: "Jua";
+  font-weight: bold;
+}
+
+.caption-text-0 {
+  /* background-color: red; */
+  position: relative;
+  width: 75%;
+  text-align: left;
+  color: white;
+  font-family: "Avenir";
+  font-weight: 900;
+  z-index: 5;
+}
+
+.caption-text {
+  /* background-color: red; */
+  margin-top: 2em;
+  margin-left: 1em;
+  width: 75%;
+  text-align: left;
+  color: white;
+  font-size: clamp(0.5rem, 4vw, 5em);
+  font-family: "arial";
+  z-index: 5;
+}
+
+.caption-text-2 {
+  /* background-color: blueviolet; */
+  float: right;
+  width: 600px;
+  height: 5vh;
+  padding-top: 2em;
+  padding-right: 50px;
+  right: 0px;
+  font-size: 1.25rem;
+  font-weight: 550;
+  text-align: right;
+  color: yellow;
+  font-family: "Jua";
+  z-index: 99;
+}
+
+.profile-image {
+  /* width: 400px;
+  height: 400px; */
+  clip-path: circle();
+}
+
+#container {
+  text-align: center;
+}

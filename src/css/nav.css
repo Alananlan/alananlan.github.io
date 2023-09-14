@@ -1,0 +1,37 @@
+@media screen and (max-width: 767px) {
+    .nav {
+        width: 250px;
+        font-size: 1em;
+    }
+  }
+
+  @media screen and (min-width: 768px) {
+    .nav {
+        width: 700px;
+        font-size: 2em;
+    }
+  }
+
+  @media screen and (min-width: 1366px) {
+    .nav {
+        width: 1000px;
+        font-size: 2.5em;
+    }
+  }
+
+.nav {
+    /* background-color: blueviolet; */
+    display: flex;
+    /* width: 1000px; */
+    height: 5vh;
+    padding-top: 1em;
+    padding-right: 1em;
+    position: absolute;
+    right: 0px;
+    font-weight: bold;
+    color: yellow;
+    
+    justify-content: space-between;
+    font-family: "Avenir";
+    z-index: 99; /* Ensure the image is behind the overlay */
+}
