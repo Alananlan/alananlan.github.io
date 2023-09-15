@@ -16,7 +16,7 @@ const App = () => {
   const isPortrait = useMediaQuery({ query: '(orientation: portrait)' });
   const isRetina = useMediaQuery({ query: '(min-resolution: 2dppx)' });
 
-  useEffect( () => {
+  useEffect(() => {
     if (isTabletOrMobile) {
       setOrientation("isTabletOrMobile");
     } else if (isDesktop) {
