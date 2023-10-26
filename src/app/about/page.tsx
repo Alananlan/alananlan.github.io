@@ -17,8 +17,8 @@ function Page() {
                 </div>
                 <div className="flex flex-col mx-10 mt-10 w-1/4 lg:text-xl md:text-md">
                     <p className="font-bold">Hello, my name is Alan.</p>
-                    <p>I&aposm 19, and I&aposm an aspiring software engineer based in Seattle, Washington.</p>
-                    <p>I&aposm currently learning about distributed systems, databases, and AI.</p>
+                    <p>I&apos;m 19, and I&apos;m an aspiring software engineer based in Seattle, Washington.</p>
+                    <p>I&apos;m currently learning about distributed systems, databases, and AI.</p>
                     <br/>
                     <p className="font-bold">I want to learn more about:</p>
                     <ul>

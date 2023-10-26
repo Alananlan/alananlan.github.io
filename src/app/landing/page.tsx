@@ -5,9 +5,13 @@ import seattle from '../../../public/photos/Seattle.png'
 import DocApp from '../../../public/photos/DocApp.png'
 import BeTogether from '../../../public/photos/BeTogether.png'
 import Flightapp from '../../../public/photos/Flightapp.png'
+import MangTracker from '../../../public/photos/MangTracker.png'
 import Image, { StaticImageData } from 'next/image'
 import { useState } from 'react'
 import router, { useRouter } from 'next/router'
+import React from 'react'
+// import { useMediaQuery } from 'react-responsive'
+import MediaQuery from 'react-responsive'
 
 export interface Project {
     name: string
@@ -26,23 +30,62 @@ export default function Page() {
         {name: "DocApp", desc: temp[0], img:DocApp, link: "https://docapp-inky.vercel.app/"},
         {name: "BeTogether", desc: temp[1], img:BeTogether, link: ""},
         {name: "FlightApp", desc: temp[2], img:Flightapp, link: ""},
-        {name: "MangTracker", desc: temp[3], img:DocApp, link: ""},
+        {name: "MangTracker", desc: temp[3], img:MangTracker, link: ""},
     ])
     
     const handleSelection = (id: number) => {
-        console.log(id)
-        setSelectedProject(id)
+        if (id === selectedProject) {
+            setSelectedProject(0)
+        } else {
+            console.log(id)
+            setSelectedProject(id)
+        }
     }
 
     const handleProjectImageClick = (link: string) => {
-        console.log("clicked")
-        window.open(link)
+        if (link === "") {
+            console.log("No link")
+        } else {
+            console.log("clicked")
+            window.open(link)
+        }
     }
 
     return (
         <div className="">
             <Header></Header>
-
+            {/* Mobile */}
+            <MediaQuery maxWidth={767}>
+                <div className="flex flex-row flex-wrap">
+                    <div className="flex flex-col mt-0 w-full text-center lg:text-xl md:text-md">
+                        {/* <p className='font-bold'>Here are some of my projects:</p> */}
+                        <ul className=''>
+                            {projects.map((project, index) => (
+                            <li className='my-10 font-medium text-black-500 ' key={index}>
+                                <button onClick={() => handleSelection(index)} className='hover:-translate-y-1 hover:scale-105 duration-300'>
+                                    {project.name}                                    
+                                </button>
+                                <hr className="w-48 h-1 mx-auto my-2 bg-gray-100 border-0 rounded dark:bg-gray-500"/>
+                                {selectedProject == index ?
+                                    <div>
+                                    <Image 
+                                    src={projects[selectedProject].img} 
+                                    alt={"seattle"} 
+                                    onClick={() => handleProjectImageClick(projects[selectedProject].link)} 
+                                    className='w-full hover:opacity-80'
+                                    height={200}/>
+                                    <p className='my-5 mx-10 text-left'>{projects[selectedProject].desc}</p>
+                                    </div>
+                                    : <></>
+                                    }
+                            </li>
+                            ))}
+                        </ul>
+                    </div>
+                </div>
+            </MediaQuery>
+            {/* Desktop or laptop */}
+            <MediaQuery minWidth={768}>
             <div className="flex flex-row flex-wrap">
                 <div className="flex flex-col mt-10 w-1/4 ml-10 lg:text-xl md:text-md">
                     <p className='font-bold'>Here are some of my projects:</p>
@@ -59,11 +102,17 @@ export default function Page() {
 
                 {/* Second column */}
                 <div className="bg-fixed w-1/2 mt-10 mx-10 lg:text-xl md:text-md sm:text-md">
-                   <Image src={projects[selectedProject].img} alt={"seattle"} onClick={() => handleProjectImageClick(projects[selectedProject].link)} className='hover:-translate-y-1 hover:scale-105 duration-300'/>
+                   <Image 
+                        src={projects[selectedProject].img} 
+                        alt={"seattle"} 
+                        onClick={() => handleProjectImageClick(projects[selectedProject].link)} 
+                        className='hover:-translate-y-1 hover:scale-105 duration-300 hover:opacity-80'
+                        height={300}/>
                    <p className='font-bold lg:text-8xl md:text-6xl sm:text-4xl'>{projects[selectedProject].name}</p>
                    <p className='my-5'>{projects[selectedProject].desc}</p>
                 </div>
             </div>
+            </MediaQuery>
         </div>
     )
   }
