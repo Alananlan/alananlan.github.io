@@ -15,8 +15,8 @@ function Page() {
             <div>
                 <p className="font-bold">{header}</p>
                 <ul>
-                    {data.map(li => (
-                        <li className="w-30">{li}</li>
+                    {data.map((li, index) => (
+                        <li key={index} className="w-30">{li}</li>
                     ))}
                 </ul>
                 <br/>
