@@ -1,18 +1,19 @@
 'use client'
 
+// TODO: Do not use image imports
 import Header from '../../components/header'
-import seattle from '../../../public/photos/Seattle.png'
 import DocApp from '../../../public/photos/DocApp.png'
 import BeTogether from '../../../public/photos/BeTogether.png'
 import Flightapp from '../../../public/photos/Flightapp.png'
 import MangTracker from '../../../public/photos/MangTracker.png'
 import Image, { StaticImageData } from 'next/image'
 import { useState } from 'react'
-import router, { useRouter } from 'next/router'
 import React from 'react'
-// import { useMediaQuery } from 'react-responsive'
 import MediaQuery from 'react-responsive'
+import Footer from '@/components/footer'
 
+// Project item interface
+// TODO: Make into separate JSON file
 export interface Project {
     name: string
     desc: string
@@ -20,6 +21,7 @@ export interface Project {
     link: string
 }
 
+// TODO: Modularize project items into JSON, extract JSON elements
 export default function Page() {
     const temp = ["DocApp is a project created during DubHacks 2023, a hackathon at the University of Washington. It aims to create a web application that connects patients to their doctors. Doctors can prescribe patient ailments/medical conditions and patients are able to ask GPT-4 common questions about the issue.", 
     "Javascript-based React Native front end application for iOS and Android. We implemented technologies such as Neo4j (graph database), Key-Value Database AWS S3, and React.js.",
@@ -33,6 +35,7 @@ export default function Page() {
         {name: "MangTracker", desc: temp[3], img:MangTracker, link: ""},
     ])
     
+    // Project selection handler
     const handleSelection = (id: number) => {
         if (id === selectedProject) {
             setSelectedProject(0)
@@ -42,6 +45,7 @@ export default function Page() {
         }
     }
 
+    // Project image click handler (redirect)
     const handleProjectImageClick = (link: string) => {
         if (link === "") {
             console.log("No link")
@@ -51,68 +55,83 @@ export default function Page() {
         }
     }
 
+    // Mobile view render
+    const MobileView = () => (
+        <div className="flex flex-row flex-wrap">
+            <div className="flex flex-col mt-0 w-full text-center lg:text-xl md:text-md">
+                {/* <p className='font-bold'>Here are some of my projects:</p> */}
+                <ul className=''>
+                    {projects.map((project, index) => (
+                    <li className='my-10 font-medium text-black-500 ' key={index}>
+                        <button onClick={() => handleSelection(index)} className='hover:-translate-y-1 hover:scale-105 duration-300'>
+                            {project.name}                                    
+                        </button>
+                        {/* <hr className="w-48 h-1 mx-auto my-2 bg-gray-100 border-0 rounded dark:bg-gray-500"/> */}
+                        {selectedProject == index ?
+                            <div>
+                            <Image 
+                            src={projects[selectedProject].img} 
+                            alt={"seattle"} 
+                            onClick={() => handleProjectImageClick(projects[selectedProject].link)} 
+                            className='w-full hover:opacity-80'
+                            height={200}/>
+                            <p className='my-5 mx-10 text-left'>{projects[selectedProject].desc}</p>
+                            </div>
+                            : <></>
+                            }
+                    </li>))}
+                </ul>
+            </div>
+        </div>
+    )
+
+    // Desktop view render
+    const DesktopView = () => (
+        <div className="flex flex-row flex-wrap">
+            {/* First column */}
+            <div className="flex flex-col mt-10 w-1/4 ml-10 lg:text-xl md:text-md">
+                <p className='font-bold'>Here are some of my projects:</p>
+                <ul>
+                    {projects.map((project, index) => (
+                    <li className='my-10 font-medium text-black-500 hover:-translate-y-1 hover:scale-105 duration-300' key={index}>
+                        <button onClick={() => handleSelection(index)}>
+                            {project.name}
+                        </button>
+                    </li>
+                    ))}
+                </ul>
+            </div>
+
+            {/* Second column */}
+            <div className="bg-fixed w-1/2 mt-10 mx-10 lg:text-xl md:text-md sm:text-md">
+                <Image 
+                    src={projects[selectedProject].img} 
+                    alt={"seattle"} 
+                    onClick={() => handleProjectImageClick(projects[selectedProject].link)} 
+                    className='hover:-translate-y-1 hover:scale-105 duration-300 hover:opacity-80'
+                    height={300}/>
+                <p className='font-bold lg:text-8xl md:text-6xl sm:text-4xl'>{projects[selectedProject].name}</p>
+                <p className='my-5'>{projects[selectedProject].desc}</p>
+            </div>
+        </div>
+    )
+
     return (
         <div className="">
+            {/* Header */}
             <Header></Header>
-            {/* Mobile */}
+
+            {/* Mobile view */}
             <MediaQuery maxWidth={767}>
-                <div className="flex flex-row flex-wrap">
-                    <div className="flex flex-col mt-0 w-full text-center lg:text-xl md:text-md">
-                        {/* <p className='font-bold'>Here are some of my projects:</p> */}
-                        <ul className=''>
-                            {projects.map((project, index) => (
-                            <li className='my-10 font-medium text-black-500 ' key={index}>
-                                <button onClick={() => handleSelection(index)} className='hover:-translate-y-1 hover:scale-105 duration-300'>
-                                    {project.name}                                    
-                                </button>
-                                <hr className="w-48 h-1 mx-auto my-2 bg-gray-100 border-0 rounded dark:bg-gray-500"/>
-                                {selectedProject == index ?
-                                    <div>
-                                    <Image 
-                                    src={projects[selectedProject].img} 
-                                    alt={"seattle"} 
-                                    onClick={() => handleProjectImageClick(projects[selectedProject].link)} 
-                                    className='w-full hover:opacity-80'
-                                    height={200}/>
-                                    <p className='my-5 mx-10 text-left'>{projects[selectedProject].desc}</p>
-                                    </div>
-                                    : <></>
-                                    }
-                            </li>
-                            ))}
-                        </ul>
-                    </div>
-                </div>
+                <MobileView></MobileView>
             </MediaQuery>
+
             {/* Desktop or laptop */}
             <MediaQuery minWidth={768}>
-            <div className="flex flex-row flex-wrap">
-                <div className="flex flex-col mt-10 w-1/4 ml-10 lg:text-xl md:text-md">
-                    <p className='font-bold'>Here are some of my projects:</p>
-                    <ul>
-                        {projects.map((project, index) => (
-                        <li className='my-10 font-medium text-black-500 hover:-translate-y-1 hover:scale-105 duration-300' key={index}>
-                            <button onClick={() => handleSelection(index)}>
-                                {project.name}
-                            </button>
-                        </li>
-                        ))}
-                    </ul>
-                </div>
-
-                {/* Second column */}
-                <div className="bg-fixed w-1/2 mt-10 mx-10 lg:text-xl md:text-md sm:text-md">
-                   <Image 
-                        src={projects[selectedProject].img} 
-                        alt={"seattle"} 
-                        onClick={() => handleProjectImageClick(projects[selectedProject].link)} 
-                        className='hover:-translate-y-1 hover:scale-105 duration-300 hover:opacity-80'
-                        height={300}/>
-                   <p className='font-bold lg:text-8xl md:text-6xl sm:text-4xl'>{projects[selectedProject].name}</p>
-                   <p className='my-5'>{projects[selectedProject].desc}</p>
-                </div>
-            </div>
+                <DesktopView></DesktopView>
             </MediaQuery>
+
+            <Footer></Footer>
         </div>
     )
   }

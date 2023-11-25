@@ -4,68 +4,83 @@ import { useRouter } from 'next/navigation'
 import avatar from '../../../public/avatar.png'
 import Image from 'next/image'
 import Header from "@/components/header";
+import MediaQuery from 'react-responsive'
+import about from "./about.json"
+import Footer from "@/components/footer";
 
-function Page() {    
-    return (
-        <div className="">
-            <Header></Header>
 
+function Page() {   
+    const Entry = (header: String, data: string[]) => {
+        return (
+            <div>
+                <p className="font-bold">{header}</p>
+                <ul>
+                    {data.map((li, index) => (
+                        <li className="w-30">{li}</li>
+                    ))}
+                </ul>
+                <br/>
+            </div>
+        )
+    }
+
+    const DesktopView = () => (
+        <div>
             {/* First column */}
             <div className="flex flex-row flex-wrap">
                 <div className="mt-10 ml-10">
                     <Image src={avatar} alt="avatar" width={300} height={300}/>
                 </div>
                 <div className="flex flex-col mx-10 mt-10 w-1/4 lg:text-xl md:text-md">
-                    <p className="font-bold">Hello, my name is Alan.</p>
-                    <p>I&apos;m 19, and I&apos;m an aspiring software engineer based in Seattle, Washington.</p>
-                    <p>I&apos;m currently learning about distributed systems, databases, and AI.</p>
-                    <br/>
-                    <p className="font-bold">I want to learn more about:</p>
-                    <ul>
-                        <li>Cybersecurity and encryption</li>
-                        <li>Operating systems and compilers</li>
-                        <li>World languages, Korean, Japanese, Spanish</li>
-                    </ul>
-                    <br/>
-                    <p className="font-bold">Here are my current goals:</p>
-                    <ul>
-                        <li>I want to land an internship this year.</li>
-                        <li>I want to become lean by summer.</li>
-                        <li>I want to run a 6:00 mile.</li>
-                    </ul>
-                    <br/>
-                    <p className="font-bold">My favorite quote:</p>
-                    <p>Luck is when preparation meets opportunity.</p>
-                    <br/>
-                    
+                    {Entry(about.intro.header, about.intro.list)}
+                    {Entry(about.learn.header, about.learn.list)}
+                    {Entry(about.goals.header, about.goals.list)}
                 </div>
 
                 {/* Second column */}
                 <div className="flex flex-col w-1/4 mx-10 mt-10 lg:text-xl md:text-md">
-                    <p className="font-bold">Where I want to travel:</p>
-                    <ul>
-                        <li>NYC, USA</li>
-                        <li>San Francisco, USA</li>
-                        <li>Tokyo, Japan</li>
-                        <li>Seoul, South Korea</li>
-                        <li>Blue Lagoon, Iceland</li>
-                        <li>Maldives Islands</li>
-                    </ul>
-                    <br/>
-                    <p className="font-bold">Some of my hobbies include:</p>
-                    <ul>
-                        <li>Tennis</li>
-                        <li>Swimming</li>
-                        <li>Gaming (Plat II in Val, Rank 8 Faceit)</li>
-                    </ul>
-                    <br/>
-                    <p className="font-bold">My personal message:</p>
-                    <p>Carpe futurum. Seize the future.</p>
-                    <br/>
+                    {Entry(about.travel.header, about.travel.list)}
+                    {Entry(about.hobbies.header, about.hobbies.list)}
+                    {Entry(about.quote.header, about.quote.list)}
+                    {Entry(about.message.header, about.message.list)}
                 </div>
             </div>
         </div>
-    );
+    )
+
+    const MobileView = () => (
+        <div>
+            {/* First column */}
+            <div className="flex flex-col items-center">
+                <div className="mt-10">
+                    <Image src={avatar} alt="avatar" width={200} height={200}/>
+                </div>
+                <div className="flex flex-col mx-10 mt-10 w-25 lg:text-xl md:text-md">
+                    {Entry(about.intro.header, about.intro.list)}
+                    {Entry(about.travel.header, about.travel.list)}
+                    {Entry(about.learn.header, about.learn.list)}
+                    {Entry(about.goals.header, about.goals.list)}
+                    {Entry(about.hobbies.header, about.hobbies.list)}
+                    {Entry(about.quote.header, about.quote.list)}
+                    {Entry(about.message.header, about.message.list)}
+                </div>
+            </div>
+        </div>
+    )
+    
+    return (
+        <div className="">
+            <Header></Header>
+            <MediaQuery maxWidth={998}>
+                <MobileView></MobileView>
+            </MediaQuery>
+            {/* Desktop or laptop */}
+            <MediaQuery minWidth={999}>
+                <DesktopView></DesktopView>
+            </MediaQuery>
+            <Footer></Footer>
+        </div>
+    )
 }
 
 export default Page;
