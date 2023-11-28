@@ -28,7 +28,6 @@ export default function Page() {
   const slides = images.map((imageName) => ({
     src: `${buildURL(imageName)}`,
   }));
-  console.log(slides)
 
   // Handle image click and open lightbox
   const handleImageClick = (imagePath: string, index: number) => {
@@ -78,6 +77,7 @@ export default function Page() {
         on={{ view: ()=>{setIndex(index)} }}
         index={index}
         slides={slides}
+        controller={{closeOnBackdropClick: true}}
       />
 
       {/* Gallery */}
