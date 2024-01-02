@@ -3,7 +3,7 @@
         "header": "Hello, my name is Alan.",
         "list": [
         "I'm 20, and I'm an aspiring software engineer based in Seattle, Washington.",
-        "I'm currently learning about distributed systems and AI."
+        "I'm currently learning about NLP."
         ]
     },
     "travel": {
@@ -20,7 +20,7 @@
     "learn": {
         "header": "I want to learn more about:",
         "list": [
-           "Cybersecurity and encryption",
+            "Cybersecurity and encryption",
             "Operating systems and compilers",
             "World languages, Korean, Japanese, Spanish"
         ]
@@ -30,7 +30,7 @@
         "list": [
             "Tennis",
             "Swimming",
-           "Gaming (Plat II in Val, Rank 8 Faceit)"
+            "Gaming (Plat II in Valorant, Rank 8 CS2 Faceit, Unranked League)"
         ]
     },
     "goals": {
