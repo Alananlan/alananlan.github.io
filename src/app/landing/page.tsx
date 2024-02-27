@@ -87,6 +87,8 @@ export default function Page() {
 
     // Desktop view render
     const DesktopView = () => (
+        <div className='flex flex-col justify-between'>
+
         <div className="flex flex-row flex-wrap">
             {/* First column */}
             <div className="flex flex-col mt-10 w-1/4 ml-10 lg:text-xl md:text-md">
@@ -104,20 +106,22 @@ export default function Page() {
 
             {/* Second column */}
             <div className="bg-fixed w-1/2 mt-10 mx-10 lg:text-xl md:text-md sm:text-md">
-                <Image 
+                {/* <Image 
                     src={projects[selectedProject].img} 
                     alt={"seattle"} 
                     onClick={() => handleProjectImageClick(projects[selectedProject].link)} 
                     className='hover:-translate-y-1 hover:scale-105 duration-300 hover:opacity-80'
-                    height={300}/>
+                    height={100}/> */}
                 <p className='font-bold lg:text-8xl md:text-6xl sm:text-4xl'>{projects[selectedProject].name}</p>
                 <p className='my-5'>{projects[selectedProject].desc}</p>
             </div>
         </div>
+        </div>
+
     )
 
     return (
-        <div className="">
+        <div>
             {/* Header */}
             <Header></Header>
 
@@ -132,6 +136,7 @@ export default function Page() {
             </MediaQuery>
 
             <Footer></Footer>
+            
         </div>
     )
   }

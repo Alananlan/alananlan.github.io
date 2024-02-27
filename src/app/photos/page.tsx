@@ -1,13 +1,20 @@
 'use client'
 
 import { useState } from 'react';
+import { Source_Code_Pro } from 'next/font/google';
 import Header from '@/components/header';
 import Footer from '@/components/footer';
 import Imgix from "react-imgix";
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
+// import SCP from "../landing/page"
 
-import React from 'react';
+const SCP = Source_Code_Pro({
+  subsets: ['latin'],
+  // CSS variable
+  variable: '--font-scp'
+})
+
 
 export default function Page() {
   // State to manage modal visibility and selected image
@@ -66,7 +73,7 @@ export default function Page() {
   )
 
   return (
-    <div className="">
+    <main className={`${SCP.variable} font-sans`}>
       {/* Header */}
       <Header />
 
@@ -85,6 +92,6 @@ export default function Page() {
 
       {/* Footer */}
       <Footer></Footer>
-    </div>
+    </main>
   );
 }
