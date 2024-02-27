@@ -11,6 +11,7 @@ import { useState } from 'react'
 import React from 'react'
 import MediaQuery from 'react-responsive'
 import Footer from '@/components/footer'
+import Projects from './projects.json'
 
 // Project item interface
 // TODO: Make into separate JSON file
@@ -34,6 +35,12 @@ export default function Page() {
         {name: "FlightApp", desc: temp[2], img:Flightapp, link: ""},
         {name: "MangTracker", desc: temp[3], img:MangTracker, link: ""},
     ])
+
+    const [jsonProjects, addJsonProject] = useState(
+        [Projects]
+    )
+
+    console.log(jsonProjects)
     
     // Project selection handler
     const handleSelection = (id: number) => {
@@ -93,7 +100,8 @@ export default function Page() {
             {/* First column */}
             <div className="flex flex-col mt-10 w-1/4 ml-10 lg:text-xl md:text-md">
                 <p className='font-bold'>Here are some of my projects:</p>
-                <ul>
+
+                {/* <ul>
                     {projects.map((project, index) => (
                     <li className='my-10 font-medium text-black-500 hover:-translate-y-1 hover:scale-105 duration-300' key={index}>
                         <button onClick={() => handleSelection(index)}>
@@ -101,6 +109,9 @@ export default function Page() {
                         </button>
                     </li>
                     ))}
+                </ul> */}
+                <ul>
+                    
                 </ul>
             </div>
 
