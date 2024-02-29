@@ -1,0 +1,57 @@
+[
+    {
+        "header": "Hello, my name is Alan.",
+        "list": [
+            "I'm a second year studying Computer Science at the Allen School.",
+            "I'm an aspiring software engineer based in Seattle, Washington.",
+            "I'm currently learning about Operating Systems."
+        ]
+    },
+    {
+        "header": "Where I want to travel:",
+        "list": [
+            "NYC, USA",
+            "San Francisco, USA",
+            "Tokyo, Japan",
+            "Seoul, South Korea",
+            "Blue Lagoon, Iceland",
+            "The Maldives"
+        ]
+    },
+    {
+        "header": "I want to learn more about:",
+        "list": [
+            "Cybersecurity and encryption",
+            "Operating systems and databases",
+            "Languages such as Korean, Japanese, Spanish"
+        ]
+    },
+    {
+        "header": "Some of my hobbies include:",
+        "list": [
+            "Tennis",
+            "Swimming",
+            "Gaming (Minecraft)"
+        ]
+    },
+    {
+        "header": "Here are my current goals:",
+        "list": [
+            "I want to find a job this year.",
+            "I want to become lean by this summer.",
+            "I want to run a 8:00 mile."
+        ]
+    },
+    {
+        "header": "My personal message:",
+        "list": [
+            "Seize the future."
+        ]
+    },
+    {
+        "header": "My favorite quote:",
+        "list": [
+            "Luck is when preparation meets opportunity."
+        ]
+    }
+]
