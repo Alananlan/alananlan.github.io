@@ -35,11 +35,11 @@ function Page() {
         </div>
         <ul>
           {About.map((info, index) => (
-            <li className="my-5">
+            <li className="my-5" key={index}>
               <div className="font-bold text-3xl">{info.header}</div>
               <hr />
-              {info.list.map((item) => (
-                <p className="text-xl">{item}</p>
+              {info.list.map((item, innerindex) => (
+                <p className="text-xl" key={innerindex}>{item}</p>
               ))}
             </li>
           ))}
@@ -72,10 +72,10 @@ function Page() {
         </div>
         <ul>
           {About.map((info, index) => (
-            <li className="my-5">
+            <li className="my-5" key={index}>
               <div className="font-bold text-2xl">{info.header}</div>
-              {info.list.map((item) => (
-                <p className="text-xl">{item}</p>
+              {info.list.map((item, innerindex) => (
+                <p className="text-xl" key={innerindex}>{item}</p>
               ))}
             </li>
           ))}

@@ -73,7 +73,7 @@ export default function Page() {
             <hr />
             <ul>
               {About[0].list.map((item, index) => (
-                <li>{item}</li>
+                <li key={index}>{item}</li>
               ))}
             </ul>
           </div>
@@ -81,7 +81,7 @@ export default function Page() {
         <p className="my-5">Here are some of my projects:</p>
         <ul>
           {jsonProjects.map((project, index) => (
-            <div>
+            <li key={index}>
               <a
                 className="font-bold lg:text-4xl md:text-4xl sm:text-2xl hover:underline duration-300 "
                 href={project.link}
@@ -91,7 +91,7 @@ export default function Page() {
               </a>
               <hr className="mt-2" />
               <p className="my-5">{project.description}</p>
-            </div>
+            </li>
           ))}
         </ul>
       </div>
