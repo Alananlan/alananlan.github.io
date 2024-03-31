@@ -65,7 +65,7 @@ export default function Page() {
     <div className="flex justify-center flex-row flex-wrap">
       <div className="flex flex-col w-1/3 mt-10 mx-10 lg:text-xl md:text-md sm:text-md">
         <div className="flex flex-row mt-10">
-          <div className="hover:scale-110 hover:-translate-y-1 hover:rotate-12 duration-300">
+          <div className="select-none hover:scale-125 hover:-translate-y-1 hover:rotate-12 duration-300">
             <Image src={avatar} alt="avatar" width={300} height={300} />
           </div>
           <div className="flex flex-col ml-5">

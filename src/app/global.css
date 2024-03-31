@@ -32,6 +32,11 @@ body {
 
 }
 
+.dark-mode {
+  background-color: #121212;
+  color: #FFFFFF;
+}
+
 /* Hide Scrollbar for Internet Explorer, Edge, Firefox */
 *{
   -ms-overflow-style: none;

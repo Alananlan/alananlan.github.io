@@ -1,5 +1,6 @@
 import { useRouter } from "next/navigation";
 import MediaQuery from "react-responsive";
+import { MdLightbulb } from "react-icons/md";
 
 export default function Header() {
   const router = useRouter();
@@ -25,6 +26,12 @@ export default function Header() {
 
   function handleContactClick() {
     router.push("/");
+  }
+
+  function toggleDarkMode() {
+    var element = document.body;
+    element.classList.toggle("dark-mode");
+    console.log("Toggle mode");
   }
 
   const MobileView = () => {
@@ -88,11 +95,19 @@ export default function Header() {
               Resume
             </button>
           </li>
+          <li>
+            <button
+              className="flex p-1 rounded-full items-center outline hover duration-300 hover:scale-125"
+              onClick={toggleDarkMode}
+            >
+              <MdLightbulb />
+            </button>
+          </li>
         </ul>
       </div>
     );
   };
-
+  
   return (
     <div className="">
       <div className="flex justify-between">
