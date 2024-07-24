@@ -1,3 +1,5 @@
+'use client'
+
 import { useRouter } from "next/navigation";
 import MediaQuery from "react-responsive";
 import { MdLightbulb } from "react-icons/md";

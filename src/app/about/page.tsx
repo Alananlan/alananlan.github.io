@@ -1,10 +1,8 @@
 "use client";
 import React from "react";
 import Image from "next/image";
-import Header from "@/components/header";
 import MediaQuery from "react-responsive";
 import About from "../../../public/about.json";
-import Footer from "@/components/footer";
 import Potato from "../../../public/photos/Potato.jpeg";
 import Pointing from "../../../public/photos/Pointing.jpeg";
 import Gum from "../../../public/photos/Gum.jpeg";
@@ -86,14 +84,12 @@ function Page() {
 
   return (
     <div className="">
-      <Header></Header>
       <MediaQuery maxWidth={767}>
         <MobileView></MobileView>
       </MediaQuery>
       <MediaQuery minWidth={768}>
         <DesktopView></DesktopView>
       </MediaQuery>
-      <Footer></Footer>
     </div>
   );
 }

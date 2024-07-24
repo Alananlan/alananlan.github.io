@@ -1,12 +1,10 @@
 "use client";
 
-import Header from "../../components/header";
 import avatar from "../../../public/avatar.png";
 import Image, { StaticImageData } from "next/image";
 import { useState } from "react";
 import React from "react";
 import MediaQuery from "react-responsive";
-import Footer from "@/components/footer";
 import Projects from "../../../public/projects.json";
 import About from "../../../public/about.json";
 
@@ -100,14 +98,12 @@ export default function Page() {
 
   return (
     <div>
-      <Header></Header>
       <MediaQuery maxWidth={767}>
         <MobileView></MobileView>
       </MediaQuery>
       <MediaQuery minWidth={768}>
         <DesktopView></DesktopView>
       </MediaQuery>
-      <Footer></Footer>
     </div>
   );
 }

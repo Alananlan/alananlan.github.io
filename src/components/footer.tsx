@@ -1,3 +1,5 @@
+'use client'
+
 export default function Footer() {
 
   function handleSocialMediaClick(link: string) {

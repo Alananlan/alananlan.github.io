@@ -1,8 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Header from "@/components/header";
-import Footer from "@/components/footer";
 import Imgix from "react-imgix";
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
@@ -91,7 +89,6 @@ export default function Page() {
 
   return (
     <main>
-      <Header />
       <Lightbox
         open={open}
         close={() => setOpen(false)}
@@ -105,7 +102,6 @@ export default function Page() {
         controller={{ closeOnBackdropClick: true }}
       />
       <Gallery handleImageClick={handleImageClick} />
-      <Footer></Footer>
     </main>
   );
 }
