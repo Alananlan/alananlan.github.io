@@ -61,8 +61,8 @@ export default function Page() {
    */
   const DesktopView = () => (
     <div className="flex justify-center flex-row flex-wrap">
-      <div className="flex flex-col w-1/3 mt-10 mx-10 lg:text-xl md:text-md sm:text-md">
-        <div className="flex flex-row mt-10">
+      <div className="flex flex-col w-1/2 mt-10 mx-10 lg:text-xl md:text-md sm:text-md">
+        {/* <div className="flex flex-row mt-10">
           <div className="select-none hover:scale-125 hover:-translate-y-1 hover:rotate-12 duration-300">
             <Image src={avatar} alt="avatar" width={300} height={300} />
           </div>
@@ -76,19 +76,19 @@ export default function Page() {
             </ul>
           </div>
         </div>
-        <p className="my-5">Here are some of my projects:</p>
+        <p className="my-5">Here are some of my projects:</p> */}
         <ul>
           {jsonProjects.map((project, index) => (
             <li key={index}>
               <a
-                className="font-bold lg:text-4xl md:text-4xl sm:text-2xl hover:underline duration-300 "
+                className="font-medium lg:text-4xl md:text-4xl sm:text-2xl hover:underline duration-300 "
                 href={project.link}
                 target="blank"
               >
                 {project.name}
               </a>
-              <hr className="mt-2" />
               <p className="my-5">{project.description}</p>
+              <hr className="my-10" />
             </li>
           ))}
         </ul>
