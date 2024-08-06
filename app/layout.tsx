@@ -6,7 +6,7 @@ import favicon from '../../public/favicon.ico'
 import Header from '../components/header';
 import Footer from '../components/footer';
 
-export const SCP = Source_Code_Pro({
+const SCP = Source_Code_Pro({
   subsets: ['latin'],
   // CSS variable
   variable: '--font-scp'

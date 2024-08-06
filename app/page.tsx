@@ -1,7 +1,7 @@
 import { InferGetServerSidePropsType } from 'next'
 import { getCategorizedPosts } from '../lib/posts'
-import { getServerSideProps } from './landing/page'
 import PostItemList from '../components/postlistitem'
+import { getServerSideProps } from 'next/dist/build/templates/pages'
 
 
 export default function Home({ fileNames }: InferGetServerSidePropsType<typeof getServerSideProps>) {
