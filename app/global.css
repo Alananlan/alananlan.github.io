@@ -17,18 +17,14 @@
 }
 
 .gallery {
-  /* display: grid; */
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  /* overflow: hidden; */
-  /* grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr)); */
 }
 
 body {
   background-color: #ffffff;
   color: #000000;
-
 }
 
 .dark-mode {
@@ -36,13 +32,38 @@ body {
   color: #FFFFFF;
 }
 
-/* Hide Scrollbar for Internet Explorer, Edge, Firefox */
-*{
-  -ms-overflow-style: none;
+.post {
+  @apply flex flex-col gap-3 text-lg tracking-wide mb-20;
 }
-/* Hide scrollbar for Chrome, Safari, Opera */
-::-webkit-scrollbar {
-  display: none;
+
+.post > h1 {
+  @apply text-4xl text-center tracking-tight;
 }
+
+.post > h2 {
+  @apply text-3xl tracking-tight;
+}
+
+.post > ol {
+  @apply list-decimal flex flex-col mx-10 gap-2;
+}
+
+.post > ul {
+  @apply list-disc flex flex-col mx-10 gap-2;
+}
+
+.post > pre {
+  @apply bg-neutral-950 text-neutral-50 p-5 overflow-scroll;
+}
+
+.post > blockquote {
+  @apply pl-5 italic border-l-2 border-neutral-600 border-opacity-40;
+}
+
+.post > p > img {
+  @apply w-1/2 mx-auto;
+}
+
+
 
 

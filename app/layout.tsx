@@ -3,8 +3,8 @@ import { Inter, Source_Code_Pro } from 'next/font/google'
 import './global.css'
 import Head from 'next/head';
 import favicon from '../../public/favicon.ico'
-import Header from '@/components/header';
-import Footer from '@/components/footer';
+import Header from '../components/header';
+import Footer from '../components/footer';
 
 export const SCP = Source_Code_Pro({
   subsets: ['latin'],
