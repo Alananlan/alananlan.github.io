@@ -1,6 +1,10 @@
 import Link from "next/link"
 import { getPostData } from "../../lib/posts"
 
+export function generateStaticParams() {
+  return [{ slug: 'Steam-SyncUp' }]
+}
+
 const Post = async ({ params }: { params: { slug: string } }) => {
   const postData = await getPostData(params.slug)
   return (
