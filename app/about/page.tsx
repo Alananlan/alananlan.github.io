@@ -2,10 +2,10 @@
 import React from "react";
 import Image from "next/image";
 import MediaQuery from "react-responsive";
-import About from "../../public/about.json";
-import Potato from "../../../public/photos/Potato.jpeg";
-import Pointing from "../../../public/photos/Pointing.jpeg";
-import Gum from "../../../public/photos/Gum.jpeg";
+import About from "@/public/about.json";
+import Potato from "@/public/photos/Potato.jpeg";
+import Pointing from "@/public/photos/Pointing.jpeg";
+import Gum from "@/public/photos/Gum.jpeg";
 
 function Page() {
   const DesktopView = () => (
@@ -34,11 +34,11 @@ function Page() {
         <ul>
           {About.map((info, index) => (
             <li className="my-5" key={index}>
-              <div className="font-bold text-3xl">{info.header}</div>
-              <hr />
+              <div className="font-medium text-3xl">{info.header}</div>
               {info.list.map((item, innerindex) => (
                 <p className="text-xl" key={innerindex}>{item}</p>
               ))}
+            <hr className="my-10"/>
             </li>
           ))}
         </ul>
@@ -71,7 +71,7 @@ function Page() {
         <ul>
           {About.map((info, index) => (
             <li className="my-5" key={index}>
-              <div className="font-bold text-2xl">{info.header}</div>
+              <div className="font-medium text-2xl">{info.header}</div>
               {info.list.map((item, innerindex) => (
                 <p className="text-xl" key={innerindex}>{item}</p>
               ))}

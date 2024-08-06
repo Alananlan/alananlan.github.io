@@ -1,13 +1,24 @@
 ---
 title: "Distributed KV-Store"
 category: "Projects"
-date: "2020-03-16"
+date: "01-10-23"
 ---
+# Distributed KV-Store
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Praesent elementum facilisis leo vel fringilla est ullamcorper eget. At imperdiet dui accumsan sit amet nulla facilities morbi tempus. Praesent elementum facilisis leo vel fringilla. Congue mauris rhoncus aenean vel. Egestas sed tempus urna et pharetra pharetra massa massa ultricies.
+This was a project from the University of Washington's CSE 452, Distributed Systems course. Scott and I built a linerizable key/value database storage system in Java that "shards" (partitions) the keys over a set of replica groups and handles cross-group transactions, similar to DynamoDB. Unfortunately, we are not able to share the code publicly, but I will go over some of the key difficulties encountered while doing this project.
 
-Venenatis cras sed felis eget velit. Consectetur libero id faucibus nisl tincidunt. Gravida in fermentum et sollicitudin ac orci phasellus egestas tellus. Volutpat consequat mauris nunc congue nisi vitae. Id aliquet risus feugiat in ante metus dictum at tempor. Sed blandit libero volutpat sed cras. Sed odio morbi quis commodo odio aenean sed adipiscing. Velit euismod in pellentesque massa placerat. Mi bibendum neque egestas congue quisque egestas diam in arcu. Nisi lacus sed viverra tellus in. Nibh cras pulvinar mattis nunc sed. Luctus accumsan tortor posuere ac ut consequat semper viverra. Fringilla ut morbi tincidunt augue interdum velit euismod.
+## Why it was so difficult
+Distributed systems are notoriously difficult because:
+- They are hard to plan ahead for
+- They are hard to get correct
+- They are hard to debug
 
-## Lorem Ipsum
+Any newcoming programmer like Scott and I were to this field will be hit hard with the relentless wrath that is distributed systems.
 
-Tristique senectus et netus et malesuada fames ac turpis. Ridiculous mus mauris vitae ultricies leo integer malesuada nunc vel. In mollis nunc sed id semper. Egestas tellus rutrum tellus pellentesque. Phasellus vestibulum lorem sed risus ultricies tristique nulla. Quis blandit turpis cursus in hac habitasse platea dictumst quisque. Eros donec ac odio tempor orci dapibus ultrices. Aliquam sem et tortor consequat id porta nibh. Adipiscing elit duis tristique sollicitudin nibh sit amet commodo nulla. Diam vulputate ut pharetra sit amet. Ut tellus elementum sagittis vitae et leo. Arcu non odio euismod lacinia at quis risus sed vulputate.
+## How long did we spend
+We spent upwards of 30+ hours each doing these labs. The majority of the time taken to complete these was not the coding itself, but writing up the design document, and debugging.
+
+## Key takeaways
+Do not procrastinate.
+Start early.
+Think carefully before implementation.

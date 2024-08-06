@@ -10,12 +10,28 @@
     {
         "header": "Where I want to travel:",
         "list": [
-            "NYC, USA",
-            "San Francisco, USA",
+            "New York City, New York, USA",
+            "San Francisco, California, USA",
             "Tokyo, Japan",
             "Seoul, South Korea",
+            "Hong Kong SAR, China",
+            "Republic of Singapore",
             "Blue Lagoon, Iceland",
             "The Maldives"
+        ]
+    },
+    {
+        "header": "Where I have been:",
+        "list": [
+            "Seattle, Washington, USA",
+            "Portland, Oregon, USA",
+            "Idaho, USA",
+            "Los Angeles, California, USA",
+            "Las Vegas, Nevada, USA",
+            "Chicago, Illinois, USA",
+            "Honolulu, Hawaii, USA",
+            "Vancouver, British Columbia, Canada",
+            "Ho Chi Minh City, Vietnam"
         ]
     },
     {
@@ -38,7 +54,6 @@
         "header": "Here are my current goals:",
         "list": [
             "I want to find a job this year.",
-            "I want to become lean by this summer.",
             "I want to run a 8:00 mile."
         ]
     },

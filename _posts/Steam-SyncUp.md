@@ -1,13 +1,17 @@
 ---
 title: "Steam SyncUp"
 category: "Projects"
-date: "2020-03-17"
+date: "01-01-24"
 ---
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Praesent elementum facilisis leo vel fringilla est ullamcorper eget. At imperdiet dui accumsan sit amet nulla facilities morbi tempus. Praesent elementum facilisis leo vel fringilla. Congue mauris rhoncus aenean vel. Egestas sed tempus urna et pharetra pharetra massa massa ultricies.
+# Steam SyncUp
+Steam SyncUp is a web application aimed at connecting gamers together. Steam SyncUp used various technologies such as React (TypeScript), Go, Tailwind, AWS Amplify, DynamoDB, and Lambda.
 
-Venenatis cras sed felis eget velit. Consectetur libero id faucibus nisl tincidunt. Gravida in fermentum et sollicitudin ac orci phasellus egestas tellus. Volutpat consequat mauris nunc congue nisi vitae. Id aliquet risus feugiat in ante metus dictum at tempor. Sed blandit libero volutpat sed cras. Sed odio morbi quis commodo odio aenean sed adipiscing. Velit euismod in pellentesque massa placerat. Mi bibendum neque egestas congue quisque egestas diam in arcu. Nisi lacus sed viverra tellus in. Nibh cras pulvinar mattis nunc sed. Luctus accumsan tortor posuere ac ut consequat semper viverra. Fringilla ut morbi tincidunt augue interdum velit euismod.
+## My role
+I worked on the front-end with another student, while three other students primarily focused on the back-end.
 
-## Lorem Ipsum
+## What we accomplished
+We were able to make the barebones application which focused on providing users access to a catalogue of games, containing public lobbies in which users can join and chat with other users within. We implemented a chatting system between multiple users using websockets, and realtime chat spam and profanity filtering.
 
-Tristique senectus et netus et malesuada fames ac turpis. Ridiculous mus mauris vitae ultricies leo integer malesuada nunc vel. In mollis nunc sed id semper. Egestas tellus rutrum tellus pellentesque. Phasellus vestibulum lorem sed risus ultricies tristique nulla. Quis blandit turpis cursus in hac habitasse platea dictumst quisque. Eros donec ac odio tempor orci dapibus ultrices. Aliquam sem et tortor consequat id porta nibh. Adipiscing elit duis tristique sollicitudin nibh sit amet commodo nulla. Diam vulputate ut pharetra sit amet. Ut tellus elementum sagittis vitae et leo. Arcu non odio euismod lacinia at quis risus sed vulputate.
+## What we learned
+It was not easy to do the things we planned out on time. Juggling between this project and full-time classes, it made development difficult. But, we acknowledged this and focused on communication. By meeting several times a week to coordinate our statuses, we were able to not only unblock one another, but stay on track the entire project duration.

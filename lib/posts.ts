@@ -36,9 +36,9 @@ const getSortedPosts = (): Post[] => {
         const dateOne = moment(a.date, format)
         const dateTwo = moment(b.date, format)
         if (dateOne.isBefore(dateTwo)) {
-            return -1
-        } else if (dateTwo.isAfter(dateOne)) {
             return 1
+        } else if (dateTwo.isAfter(dateOne)) {
+            return -1
         } else {
             return 0
         }

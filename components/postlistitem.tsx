@@ -12,12 +12,12 @@ const PostItemList = ({ category, posts }: Props) => {
   return (
     <div className="flex flex-col gap-5 mb-20">
       <h2 className="text-4xl">{category}</h2>
-      <div className="flex flex-col gap-2.5 font-poppins text-lg">
+      <div className="flex flex-col gap-2.5 text-lg">
         {posts.map((post, id) => (
           <Link
             href={`/${post.id}`}
             key={id}
-            className="text-neutral-900 hover:text-blue-700 transition duration-150"
+            className="hover:text-blue-700 transition duration-150"
           >
             {post.title}
           </Link>

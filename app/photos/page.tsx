@@ -69,7 +69,7 @@ export default function Page() {
           onClick={() => handleImageClick(buildURL(image), index)}
         >
           <div className="box-border h-80 w-60 content-center shadow-lg bg-white hover:-translate-y-1 hover:scale-105 duration-300">
-            <div className="pl-5 pt-5">
+            <div className="pl-5">
               <Imgix
                 sizes="(min-width: 960px) 33vw, (min-width: 640px) 50vw, 100vw"
                 src={buildURL(image)}
