@@ -11,6 +11,10 @@ const config: Config = {
       fontFamily: {
         base: ['Helvetica Neue', 'sans-serif'],
         sans: ['var(--font-scp)']
+      },
+      listStyleType: {
+        square: 'square',
+        circle: 'circle'
       }
     },
   },

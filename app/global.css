@@ -52,6 +52,14 @@ body {
   @apply list-disc flex flex-col mx-10 gap-2;
 }
 
+.post > ul > li > ul {
+  @apply list-circle flex flex-col mx-10 gap-2;
+}
+
+.post > ul > li > ul > li > ul {
+  @apply list-square flex flex-col mx-10 gap-2;
+}
+
 .post > pre {
   @apply bg-neutral-950 text-neutral-50 p-5 overflow-scroll;
 }

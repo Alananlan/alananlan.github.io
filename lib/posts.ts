@@ -69,7 +69,7 @@ export const getPostData = async (id: string) => {
     const processedContent = await remark().use(html).process(matterResult.content)
   
     const contentHtml = processedContent.toString()
-  
+
     return {
       id,
       contentHtml,
