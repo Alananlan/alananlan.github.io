@@ -8,7 +8,7 @@ import type { Post } from "../interfaces/post"
 
 const postsDirectoryPath = path.join(process.cwd(), "_posts")
 
-const getSortedPosts = (): Post[] => {
+export const getSortedPosts = (): Post[] => {
     const fileNames = fs.readdirSync(postsDirectoryPath);
 
     if (!fileNames) {

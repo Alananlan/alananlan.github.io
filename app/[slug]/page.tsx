@@ -1,8 +1,13 @@
 import Link from "next/link"
-import { getPostData } from "../../lib/posts"
+import { getPostData, getSortedPosts } from "@/lib/posts"
 
 export function generateStaticParams() {
-  return [{ slug: 'Steam-SyncUp' }]
+  const posts = getSortedPosts()
+  let slugs = []
+  for (let i = 0; i < posts.length; i++) {
+    slugs.push({slug: posts[i].id})
+  }
+  return slugs
 }
 
 const Post = async ({ params }: { params: { slug: string } }) => {
