@@ -21,7 +21,7 @@ export default function Header() {
 
   function handleResumeClick() {
     window.open(
-      "https://drive.google.com/file/d/1hyO-ZTnFl_y_P9t5cHYGIfukuJ9RJrtn/view?usp=drive_link",
+      "https://docs.google.com/document/d/18pgGRrVIBxnAGnhRQ51j2vTbZDHSJ3gWG1vZGPlFY4M/edit?usp=sharing",
       "_blank",
     );
   }

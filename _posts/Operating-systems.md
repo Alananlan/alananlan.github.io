@@ -1070,8 +1070,186 @@ Dining philosophers
 
 ## Week 5
 <!-->Week 5 Part 1 <-->
+Safe, unsafe, and deadlock states
+
+- Safe → At least one possible way of granting resource that lets every member finish their request
+- Unsafe → At least one future request can cause system to deadlock, unsafe but not deadlock (future request has not been made yet)
+
+Example:
+
+- Available is the actual current state of the system
+- To be available is the prophecy, imagining the potential state of the system
+- 3 chopsticks, 3 philosophers, each need a max of 2 chopsticks, but will request one at a time
+- Let philosophers A, B, C start with 0 chopsticks
+    
+    1. Grant A 1 chopstick, available = 2, to be available = 2
+    
+    1.1 When A gets another chopstick, to be available = 3 because 2 (TBA) - 1 (give to A) + 2 (A returns 2) = 3
+    
+    1.2 We can check this for each member A, B, C for the current state, and determine that we remain in a safe state
+    
+    2. Grant C a chopstick, available = 1, to be available = 2 or 3
+    
+    2.1 To be available = 2 assumes that we give the chopstick to either A or C before B
+    
+    3. Grant B a chopstick, available = 0, to be available = 0
+    
+    3.1 No parties can finish (to be available will never be > 0), system is in an unsafe state
+    
+    3.2 Unsafe until a party chooses to execute a future request (request made) that it becomes a deadlock state
+    
+
+Last deadlock prevention, deadlock detection
+
+- If it is rare, detect and recover when deadlock occurs
+- Detection can be done via resource allocation graph
+- P1 waiting for → r1 held by → P2 waiting for → r2 held by → P1 (cycle)
+- High number of false positives but comes with performance penalties
+    - Abort & recover after detection
+- Ostrich algorithm
+    - Just let user kill or reboot, relieves responsibility from system
+
+Physical memory management
+
+- Volatile, byte addressable, order of GBs
+- Access latency is ~200 cycles, L1 cache is (~7 cycles/single digits)
+- Process’s code & data needs to be in memory
+
+Problem: Many processes, limited physical memory, possible solutions includ
+
+- Attempt 1: If we are single core, maybe process can use the entire physical memory
+    - Removes the need for memory translation and overhead
+    - Context switch, very high scheduling overhead
+- Write A’s VAS somewhere else (disk, slow but lots of room)
+- Then load B’s VAS into memory
+- How do we enforce kernel/user memory separation?
+- Cannot do this in a multicore setting
+- Attempt 2: Divide up physical memory, support multiple processes, divvy up memory per process A, B, C regions
+- Less context switch overhead
+- Still needs virtual → physical translation
+- Base = where does a process’s memory start in DRAM (we need to + C some constant to offset the proper physical location in DRAM)
+- Bound = size of VAS (sizes of program region)
+    
+    ![Screenshot 2024-05-08 at 8.27.54 PM.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/d05bbc56-e21c-47d8-b807-9362ccfd7522/46623c31-2708-4729-a061-46627248cc1c/Screenshot_2024-05-08_at_8.27.54_PM.png)
+    
+- How does this support growth? We get lucky if a new process terminates. Otherwise we reject growing the memory space.
+- If we terminate a region, lets say B, where B lies between A and C (A, B, C), and a new process D requires a lot of memory but A and C prevent it, D must stall until a suitable region becomes available
+- External fragmentation, common for memory allocation
+- We can perform compaction (squishing A and C up together) to avoid fragmentation, must update base and bound registers for each compacted process
+    - Expensive operation, must wait for compaction, variability in performance, non-consistent results
+    - Often times we want to share library code, cow fork, but base and bound approach makes this impossible, cannot specify which parts of each region is shared
+- Translation done on the entire VAS, cannot share part of it
+
+Attempt 3: Finer-grained translation & permission management
+
+- Process’s VAS can map its memory to different regions in DRAM
+- More control of sharing, many multiple processes can point to same physical location
+- Want to use a fixed size chunk (page, typically 4096 KB)
+- No more external fragmentation
+    - But can result in internal fragmentation, because let’s say our process only uses 1 byte of a virtual page, but allocated a whole page to it, wasted space because too much
+    - Versus external fragmentation, where there is space but not enough, both lead to wasted space
+    - As long as any room is physically available, then process can grow its own VAS, DRAM no longer contiguous
+- We can only load pages in use to memory, we can have holes in the VAS and only allocate to DRAM when we need to access it
+    - Demand paging
+- Access new DRAM page, no existing translation → page fault (trap 14), stores address causing page fault in cr2 and %rip causing access
+
+Kernel must track what VAS are valid and should be brought into memory, versus what address should not be accessed
+
+- Segfault is when process tries to access invalid memory
+- Page fault is seamless, when pointer tries to access page of VAS not mapped to physical memory, so memory management unit (MMU) must fetch from disk
+- https://stackoverflow.com/questions/6950549/segmentation-fault-vs-page-fault
+
+Strategy is called paging: translation table
+
 <!-->Week 5 Part 2 <-->
+Attempt 3: divide virtual & physical memory
+
+- Mapping VAS to physical memory, called frames or physical pages
+- Different processes can share the read-only portions of code
+- Having finer granularity, more complicated management, requires translation on a page level
+    - Versus a naiive approach where we only maintain VA + base approach for lookups
+- Memory translation table
+    - Page to physical page (frame)
+        - Any offset in a page will be the same offset in the physical page, no need for translation
+        - Offset will be lower bits (from the right side, typically 12 bits because 2^12 = 4096)
+            
+            
+
+Page table, storing translations for all pages
+
+- Giant array [], index using page # as the index, if it is mapped to physical address, then store the frame number in the corresponding entry
+    - Then get the value, concat with the offset to find the physical address
+- Memory translation done by hardware, page table walk
+- Address is stored in the page table base register, %cr3, address is a physical address
+- Each frame has an access mode, R/W permissions
+- We are doubling memory access every time, slow without caching
+    
+    
+
+Translation Lookaside Buffer (TLB)
+
+- Dedicated cache for memory translation
+- After a failed cache hit and after a page table lookup, we store the frame back in the cache
+- Cost of single array page table
+- Per-process data structure, same kernel mapping in VAS maps to same physical address
+- Large array can take up a lot of space, we reserve space for it regardless of if it is even being used
+    - We want to reduce the space of this page table
+    - Some may create super page/huge page with 2 MB and 1 GB, less bits available to represent pages because larger chunks
+    - Internal fragmentation, low memory utilization, but cache hits would be more frequent because larger pages, less total number of pages in the array
+- Still many page tables, lots of memory
+- Inverted page table
+- Typically we map a virtual page → frame, but instead we have a global inverted page table
+    - Indexed by frame #, storing page #, must also store PID because pages are per process-dependent
 <!-->Week 5 Part 3 <-->
+Multilevel page table
+
+![Screenshot 2024-05-08 at 10.36.33 PM.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/d05bbc56-e21c-47d8-b807-9362ccfd7522/e71e9079-3bb7-4710-aa23-5d265dcab06a/Screenshot_2024-05-08_at_10.36.33_PM.png)
+
+- In a traditional 1 level page table, we may have 2^52 pages (2^64 (address bits) - 2^12 (4 KB page offset), we have subsets of tables
+- Lets say we only use one a single page, instead of allocating an array of 2^52 pages, we only allocate one level 3 page table, one level 2 page table, and one level 1 page table (all used as indices to get to the level 3)
+    
+    
+
+Example:
+
+- We have a 21 bit virtual address, page size 4096 bits → 12 bit representation
+- Index 1 is 4 bits, index 2 is 5 bits, offset is 12 bits = 21 bits VA
+- Let code region be 0x1000 - 0x1fff
+- Let stack region be 0xfe000 - 0xfefff
+- First, we allocate a first level page table, 2^4 (16) entries
+- Then, we allocate a second level page table, 2^5 (32) entries
+- Maximum number of pages = 512, equivalent to the number of bits (2^9 = 512)
+
+x86 Page Table
+
+![Screenshot 2024-05-08 at 11.00.01 PM.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/d05bbc56-e21c-47d8-b807-9362ccfd7522/45c72cf7-3c64-4571-a90f-758b3aa38773/Screenshot_2024-05-08_at_11.00.01_PM.png)
+
+- Trap 13 is memory accesses outside of the possible 2^48 bit VAS
+- Sign extend is usually just 1s or 0s, and addresses with random bits are invalid, invokes a general protection fault
+- At any point, if we traverse and the present bit is 0, then invoke a page fault
+
+![Screenshot 2024-05-08 at 11.07.00 PM.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/d05bbc56-e21c-47d8-b807-9362ccfd7522/4e606667-4c41-4c79-8c7d-4bb9e4a4494c/Screenshot_2024-05-08_at_11.07.00_PM.png)
+
+Page Faults
+
+- %rip accesses memory, stores the fault address into a register
+- Exception: problem with page table walk, or there is a permission mismatch (marked read/write only or kernel only page)
+- Error code in “tf→err” if the bit is present, user/kernel, read/write
+- Demand paging is one cause of page fault (pages that kernel knows exists)
+    - Growing the stack, as we push more items to stack it will be page fault if exceeds size, not currently mapped
+    - OS is responsible for determining fault address
+    - Heap growth may also cause page fault
+    - Memory map
+- Permission mismatching
+- Copy on write (cow) fork, when process has write access, we map it to read only to detect when a write occurs, then establish new mapping with write permissions
+    - Kernel must track whether page is COW or not
+- Write to read only page (actual permission violation)
+- TLB caches permissions, so when we update the permissions we must flush the TLB
+    - When we make a new mapping and add to the TLB, we don’t need to flush, but when we change the permission such as when we do COW, then we need to flush
+- Kernel needs to track additional info about VAS
+    - Machine independent, specified by architecture, set of bookkeeping structure, describes state of the virtual address
+    - Machine dependent page table → loaded in page table base register (cr3)
+    - vspaceupdate() updates entries into the machine dependent page table (presumably after updating some page update such as a permission update)
 
 ## Week 6
 <!-->Week 6 Part 1 <-->
