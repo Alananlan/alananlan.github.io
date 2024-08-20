@@ -1,7 +1,7 @@
 ---
 title: "Distributed KV-Store"
 category: "Projects"
-date: "01-10-23"
+date: "10-01-2023"
 ---
 # Distributed KV-Store
 

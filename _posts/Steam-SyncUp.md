@@ -1,7 +1,7 @@
 ---
 title: "Steam SyncUp"
 category: "Projects"
-date: "01-01-24"
+date: "01-01-2024"
 ---
 
 # Steam SyncUp

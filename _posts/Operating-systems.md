@@ -1,7 +1,7 @@
 ---
 title: "Operating Systems"
 category: "Notes"
-date: "01-03-24"
+date: "03-01-2024"
 ---
 
 # Operating System Notes

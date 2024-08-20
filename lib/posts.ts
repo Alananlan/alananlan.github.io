@@ -32,12 +32,12 @@ export const getSortedPosts = (): Post[] => {
     })
 
     return allPostsData.sort((a, b) => {
-        const format = "DD-MM-YYYY"
+        const format = "MM-DD-YYYY"
         const dateOne = moment(a.date, format)
         const dateTwo = moment(b.date, format)
         if (dateOne.isBefore(dateTwo)) {
             return 1
-        } else if (dateTwo.isAfter(dateOne)) {
+        } else if (dateTwo.isBefore(dateOne)) {
             return -1
         } else {
             return 0
@@ -75,6 +75,6 @@ export const getPostData = async (id: string) => {
       contentHtml,
       title: matterResult.data.title,
       category: matterResult.data.category,
-      date: moment(matterResult.data.date, "DD-MM-YYYY").format("MMMM Do YYYY")
+      date: moment(matterResult.data.date, "MM-DD-YYYY").format("MMMM Do YYYY")
     }
 }

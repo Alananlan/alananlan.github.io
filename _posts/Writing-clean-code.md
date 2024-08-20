@@ -1,7 +1,7 @@
 ---
 title: "How I write clean code"
 category: "Software Engineering"
-date: "05-08-24"
+date: "05-08-2024"
 ---
 # How I Write Clean Code
 When we write code, we might find ourselves writing continuously in a flow-state. At the end of our brain-throwup session, we might use a linter and check for any syntax errors or to follow a style guide, and run the code through some test suite. But, we often forget that our code may have long lasting legacies outside of the time you spend maintaining it. Writing clean, efficient, and documented code is essential in our modern world of software and without some of these practices, we may find ourselves wasting more time trying to understand code than improving the code.
