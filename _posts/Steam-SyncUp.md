@@ -4,8 +4,8 @@ category: "Projects"
 date: "01-01-2024"
 ---
 
-# Steam SyncUp
-Steam SyncUp is a web application aimed at connecting gamers together. Steam SyncUp used various technologies such as React (TypeScript), Go, Tailwind, AWS Amplify, DynamoDB, and Lambda.
+# [Steam SyncUp ↗](https://github.com/scott-dang/Steam-SyncUp)
+[Steam SyncUp (link)](https://github.com/scott-dang/Steam-SyncUp) is a web application aimed at connecting gamers together. Steam SyncUp used various technologies such as React (TypeScript), Go, Tailwind, AWS Amplify, DynamoDB, and Lambda.
 
 ## My role
 I worked on the front-end with another student, while three other students primarily focused on the back-end.
