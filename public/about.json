@@ -4,7 +4,7 @@
         "list": [
             "I'm a second year studying Computer Science at the Allen School.",
             "I'm an aspiring software engineer based in Seattle, Washington.",
-            "I'm currently learning about Operating Systems."
+            "I'm currently learning about Computer Security."
         ]
     },
     {
@@ -47,14 +47,15 @@
         "list": [
             "Tennis",
             "Swimming",
-            "Gaming (Minecraft)"
+            "Minecraft, Civilization VI, Valorant"
         ]
     },
     {
         "header": "Here are my current goals:",
         "list": [
-            "I want to find a job this year.",
-            "I want to run a 8:00 mile."
+            "I want to find a job.",
+            "I want to run an 8:00 mile.",
+            "I want to code everyday."
         ]
     },
     {
