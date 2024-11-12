@@ -1253,15 +1253,488 @@ Page Faults
 
 ## Week 6
 <!-->Week 6 Part 1 <-->
+Page Fault
+
+- Valid page fault, kernel can do something about it (demand paging, mmap, cow)
+- Invalid page fault (NULL pointer), terminate the process
+
+Handling valid page fault
+
+- Allocate a frame, frame not built yet, what do we do if we have no memory available?
+    - Perhaps we can block until memory becomes available
+    - Perhaps we can forcefully make memory available
+        - Write and store the frame to a different storage device
+    - Perhaps we could kill a process, general purpose OS will avoid this (hardware caches pages, tries to swap pages)
+    
+
+Eviction mechanism (swapping)
+
+- We can write a frame to somewhere on disk (disk has 512 B pages, SSD has 4 KB pages)
+- Disk is persisted, memory is not persisted
+- Scans through the blocks (dedicate a separate swap partition not used by default file system)
+    - If we run out of memory space and swap partition upper limit, nothing left to do
+    - Swap partition is a range of blocks
+    - Bitmap, giant bit array (page has 4096 bytes, or 4096 * 8 bits), if a block is used = 1 if unused = 0, stored somewhere in kernel memory
+    
+
+For eviction, we need to allocate swap space from the bitmap (allocate on disk/persistent memory)
+
+- Must remove the old page to frame mapping from the page table, and TLB shootdown (remember to acquire lock here), possible that multiple pages are mapped to the same frame (per frame metadata core map entry)
+- Then write out the frame to the disk block
+- Must track swap location of the faulting page
+    - Stored in the PTE field
+    - After that, reallocate the frame to the faulting page, establish mapping
+    
+
+Eviction policy
+
+- How do we choose an eviction candidate
+    - Kernel frame eviction? Pinned into physical memory, kernel will bypass
+    - What if it is a shared library?
+    - Frames within the faulting process? (local page replacement policy) Good for performance isolation, Windows uses this and global mix
+    - Frames across the system other process memory overhead? (global page replacement policy), Linux uses this
+- Page replacement policies
+    - FIFO → a queue of frames as we allocate them, evict from the front of the queue
+    - Easiest algorithm to implement
+    - Access pattern, cyclical
+    - Belady’s anomaly, increasing # of frames, causes more page faults if we use FIFO
+
 <!-->Week 6 Part 2 <-->
+When we are under memory pressure, when we need to allocate a frame when there aren’t an
+
+- Allocate a frame when there are none
+- Track a threshold of free frames
+- Possibly mark the frame as free
+
+Eviction with swap partition
+
+- Can use swapfile or swap block region
+- Evict a frame → requires us to allocate a swap space (write down where a page is being swapped to)
+    - When we need the swap page → page fault handler swap it back from swap partition into memory
+    - If the process is killed/exited then we might never bring it back from partition
+        - But must remember to free up the swap entries
+
+Eviction policies
+
+- FIFO → evicting frames based on allocation order
+    - Queue at the time of allocation, low overhead
+    - Suffers from Belady’s anomaly, more page faults and evictions as we add more frames available
+
+Optimal algorithm for page replacement policy
+
+- We know our frame #, all memory access, we want to reduce the # of page faults
+- Evict furthest in the future, but we don’t know which memory access will occur (non-deterministic)
+- Least recently used (LRU)
+    - Evict oldest accessed page
+    
+
+How to implement LRU
+
+- Count # of pages accessed across the system since a page is accessed
+    - On every memory access, perform arbitrary amount of counter updates
+- Queue LRU
+    - Quick access, move a page to the end of the queue, less metadata
+- On eviction time, scan through all PTEs to find page to evict
+    
+    
+
+Clock
+
+- Approximates LRU
+- Use the access bit
+- We only set the accessed bit when the memory is being performed on, such as on a page table walk, and searching the TLB (assumes bit already set because we put it in the TLB)
+- When we are looking for frame/pages to evict, we look at accessed bit, and if it is 0 then we evict, otherwise we clear the accessed bit and continue searching
+- Clock hand points to a list of frames, then each frame has mapping to page, then check PTE for accessed bit
+    
+    ![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/d05bbc56-e21c-47d8-b807-9362ccfd7522/4ac521c1-4a21-4ab9-933e-f6f852fde35e/Untitled.png)
+    
+
+Cost of eviction
+
+- Eviction of a code page, program already on disk and is loaded into memory, so because it is already in disk we do not need to re-write to swap
+
+
 <!-->Week 6 Part 3 <-->
+Signals: Interprocess communication (IPC), a predefined set of events that processes can use to communicate to each other
+
+- Pipe is a form of IPC, variable content
+- Signal is a form of IPC of fixed events
+    
+    
+
+Mechanism of signals (software exceptions)
+
+- We want to send signals
+    - kill(pid, signumber)
+    - SIGSEGV, invalid mem ref.
+    - SIGFPE, floating point error
+    - SIGILL, illegal instruction
+    - These are typically sent by the kernel upon hardware exceptions to process causing problem
+    - We send these signals to the process because some exceptions might be handled by the process
+
+How would we implement the “kill” call?
+
+- Track a pending set of signals for each process (possibly in the PCB), signals sent but not yet delivered
+- We don’t want arbitrary processes to send signals to each other, especially the kill signal
+- We don’t want only the parent to be able to kill the process, but maybe admin privileges?
+- Draw the boundary at the user level, processes at the same level (within the user level) can communicate to one another, example a root process in the user level can kill
+
+And receive signals
+
+- Signal delivery is implicit to the receiver
+    - OS tracks pending signals as a set (multiple sends results in a single delivery)
+- Default actions defined by the kernel for each signal (default handler)
+- User process can define custom handlers for most signals (but cannot define custom behaviors for sigkill and sigstop)
+    - Handlers defined in user code, in user memory
+- How might we implement this?
+    - Must be in the kernel first to be able to deliver the signal
+    - When the receiver enters the kernel, context switch (timer interrupt), right before return to the user then process handles the kernel
+- User calls signal(sigNum, handler()) syscall, %rip points to handler, goes back into kernel right after return from kernel
+
+User level threads
+
+- Kernel level threads (everything so far), context switch goes into the kernel (not cheap operation, costs hundreds of cycles, must push states and pop states)
+    - Managed and scheduled by the kernel
+    - TCB, kernel stack, kernel scheduler
+    - Threads enable us to write concurrent code, structure our code into independent tasks makes program more logically reasonable, but it is expensive to create and schedule threads
+- User level threads (all done within user space), context switching is much cheaper
+    - Threads managed and scheduled by user libraries/runtime
+    - Created and maintained by user code, kernel is unaware of these existence
+
 
 ## Week 7
 <!-->Week 7 Part 1 <-->
+User threads
+
+- Managed & scheduled by the user libraries/runtime (user space)
+- Why use them?
+    - Cheaper, no need for mode switching
+    - User can specify custom scheduling policy, more efficient
+        - Kernel uses preemption (fair sharing of CPU) vs User thread cooperative scheduling (voluntarily yield)
+- How do they even run?
+    - Kernel thread (every process starts with one)
+    - Runs and switches between different user level threads
+    - N:1 user threads to kernel thread
+    - N:M model (threadpool)
+        - N number of user threads (tasks), M number of kernel (worker) threads
+        - M kernel threads proportional to number of CPU cores
+
+What happens if a user thread blocks?
+
+- Assume N:1 model
+- Depends on how a user thread blocks
+- If it blocks due to a synchronization primitive like sleeplock, we can transfer control to user-level scheduler, to schedule other user level threads
+- If it blocks due to an IO, syscall, or page fault (kernel exception), can cause other user threads to block
+    - Maybe use a nonblocking system call
+    - Before making a syscall, perhaps schedule another thread to run?
+        - Wake up another kernel level thread to take over remaining user threads
+
+Storage Devices
+
+- Persistent, nonvolatile, large capacity
+- Hard drive/spinning disk
+    - Cheap GB per $, (10-20$ per TB)
+    - Physical motion (slow access latency, 10-20ms
+- SSD
+    - More expensive (~3x)
+    - No physical motion, faster access 10-100ns
+    
+
+Hard drives
+
+- Track, divided into sectors
+    - Sector is the unit of read
+    - Typically only outer tracks are used because larger storage space
+- Disk request
+- Request sent to controller
+- Move the arm to track (seek time: 1-20ms)
+- Wait for sector to spin under the disk head (rotational time: 4-15ms on RPM)
+- Transfer time back to host (transfer rate/time)
+- Total: about 120ms
+- Latency
+    - Total time = seek time + rotational time + transfer time
+    - Cost of reading 1 sector (512 bytes)
+        - Seek time = 10ms
+        - Rotation = 7200 RPM = 120 RPS = 0.12 RPMS = 8.3 ms per rotation / 2 = 4 ms for average rotational time (divide by 2 for average time of half spin)
+        - Bandwidth = 120 MiB/s → B/s = 512/125829120 * 1000ms = 0.004 ms
+        - 10ms + 4ms + 0.004ms = 14.004 ms for a single read
+        - Reading consecutive sectors better, only increases the bandwidth latency
+            - 10ms + 4ms + 10 * 0.004 ms = 14.04 ms for 10 consecutive sector reads
+        - Reading random sectors becomes some X multiple of bandwidth latency
+            - 10 * (10 ms + 4 ms + 0.004 ms) = 140.04 ms for 10 random sector reads
+            
+
+IOPS
+- IO operations per second
+- Number of IO requests / Total latency
+
 <!-->Week 7 Part 2 <-->
+Solid State Drive
+
+- Persistent, block-addressable, large capacity
+- Multiple NAND flash memory packages
+    - Blocks, group of pages
+    - Block contains number of pages, page = 4KB
+    - Read/write page, page level operation is atomic
+- NAND flash packages connected by multiple channels
+    - Highly concurrent/parallel architecture
+    - No moving parts, much better access latency
+        
+        
+
+Operations SSD performs
+
+- Read a page (4KB), fast access latency (tens of microseconds)
+- Write a page (4KB), only write to a page that has not been written before, clean page
+- (program)
+- To write, we set bits to 0, but by default a clean page has all bits set to 1, (hundreds of microseconds)
+- Erase operation on a block (several MBs 1-8), sets all bits of all pages within the block to 1s (slow operation, ms)
+- Block CONTAINS pages, so each block has 1-8 pages
+    
+    ![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/d05bbc56-e21c-47d8-b807-9362ccfd7522/d45fbe6a-1a22-49b8-a47a-57fc6cd797e9/Untitled.png)
+    
+- If we want to write to a pre-existing location (overwrite), because we need to wipe, we write previously written pages elsewhere and restore the content back, then erase the temp clean page earlier
+- We can only write to clean pages, and we have to write sequentially
+    - Any free page is valid for temp block storage
+- Whole process is invisible to users
+    
+    
+
+Reliability of SSD
+
+- Lots of erase & program repeatedly on a single page
+    - Endurance problem, 10-100k writes/programs
+    - As a user, it is nice to have overwrites but SSD lifespan is reduced upon each write
+- Logical block address → translate it to its physical block address
+    - User can interact with (kernel)
+    - Wear leveling, implemented through the flash translation layer (FTL)
+        - Translation/management of mappings
+        - Garbage collection
+    
+
+Latency of SSD request
+
+- Read a 4KB page, 10ms read
+    - total latency = access latency + transfer time (bandwidth)
+    - Typical SSD bandwidth is ~500MiB/s → 7.8 microseconds of transfer time, total = 17.8 microseconds
+- Much smaller gap for sequential & random access
+    - Random can sometimes be faster than sequential
+    - Depending on the random access pattern (does allow for parallel access)
+
 <!-->Week 7 Part 3 <-->
+Abstraction
+
+- Files = named data, persistent (shm = named memory)
+    - Composed of data and metadata
+    - Metadata includes size of file, owner of file, types of files, accessed/creation time, location of actual data (data layout)
+- Directories
+    - Way to organize multiple files
+    - Represent directory as file: type between dir and file
+    - Metadata and data of a directory
+        - Metadata of dir includes similar info, size of the dir, owner, type, access/creation time
+    - What data?
+        - Other files and directories under this directory
+        - Content (directory entries) stored in an array in a directory data block
+        - Directory entry includes filename and location of file metadata (on disk)
+    - First two entries in dir include . and .., the current dir and the parent dir
+    
+
+Path
+
+- Starts with a slash, starting from the root directory, absolute path
+- Relative path uses current working dir
+    
+    
+
+Filesys Implementation
+
+- Manages disk blocks usage and allocation
+    - Usage info stored in bitmap, single bit for each block, persisted, stored on disk
+        - Bitmap tracks its own sectors/blocks
+- Metadata for each file/directory
+    - Because of usage pattern of data, we create a metadata table, reserves sectors tracking metadata
+    - On SSD it needs 4KB to track a page
+    - Depending on metadata size, we can fit >1 metadata unit inside a data sector (whether it be 512 byte disk block or 4 KB SSD page)
+    - inodetable (metadata table) are pre-allocated sectors that hold inodes (metadata)
+    - Root directory inode stored at a known pre-defined location
+- Metadata of filesystem (superblock)
+    - Stores start of bitmap sectors & the size of sectors
+    - Stores start sector of inodetable & size of number of blocks
+    - Superblock stored at a known pre-defined location (block 0 or block 1 etc.)
+    
+
+Data layout
+
+- How data content is stored on disk
+- Contiguous allocation
+    - No matter how large our content, we know start and end
+    - Simple, small storage space, easy to compute data block location
+    - Given the offset, we know exactly the block to look at (remember + 1 edge case)
+    - xk starter code uses contiguous
+    - Downside: cannot grow more space
+- Linked allocation
+    - Metadata stores head (or tail too), and each block reserves some pointer data to the next block
+    - Take into account reserved space for pointer (subtract size of a pointer like 4 B)
+    - Upside: can continue growing without limits, arbitrary size
+    - Downside: bad for performance, more seek time overhead
 
 ## Week 8
 <!-->Week 8 Part 1 <-->
+Data layout
+
+- Contiguous allocation, linked allocation
+- Maybe we can combine the two
+    
+    ![Screenshot 2024-05-25 at 5.39.07 PM.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/d05bbc56-e21c-47d8-b807-9362ccfd7522/20b67d11-dacb-4d29-a497-256f92d159f0/Screenshot_2024-05-25_at_5.39.07_PM.png)
+    
+- Contiguous chunk = extent (contiguous region of sectors)
+    - Variable sized contiguous region
+    - Extent needs to track start and size
+    - Group by extents (group of sectors) instead of individual sectors
+    - Maybe we can just have an array of extents
+        - But, in order to find the proper offset, because each extent’s size is variable, we must look through the size of each extent
+- But, because we’d store the extent array in the inode, it may become too big, and then it will be corrupted because inodes will leak into >1 data block
+- One way to fix this problem is using index block/indirection
+    - Store a block pointer to an indirection block
+    - But, more cost because we must include read to the indirection block itself
+    - This can lean into multilevel indexing
+        
+        Each pointer may point to another indirection block, doubly indirect block, triply indirect etc.
+        
+
+Case Study: Fast File System (FFS)
+
+- ext, ext2 linux file systems
+- Designed for fast disk performance
+    - Keep contiguous data as much as possible
+        - Delay allocation, just buffer as much memory as possible, no contract for instant persistency, allows batching of many bytes
+        - Mostly small files, need support for large files (most files are <20 MB)
+- An inode contains a data layout array
+- Contains 12 direct pointers (to blocks)
+    - 1 indirect block pointer
+    - 1 doubly indirect block pointer
+    - 1 triply indirect block pointer
+    
+    ![Screenshot 2024-05-25 at 5.53.03 PM.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/d05bbc56-e21c-47d8-b807-9362ccfd7522/dce56401-9a01-4785-93c1-6d78cc5de77b/Screenshot_2024-05-25_at_5.53.03_PM.png)
+    
+    - Even though disk block (sector division) is 512, the OS uses 4096 B, taking up 8 sectors, each direct pointer takes up 8 consecutive chunks
+    - Bitmap size might get reduced
+    - To create a new file
+- We must allocate a new inode (update to the inodetable)
+    - Set up the inode
+    - Parent directory data block change/metadata change
+    - Say we want to write to file, we allocate the first DP then put it back into the inode, then write data to block on disk, everything else is NIL/0
+    
+    POSIX API: lseek (lets a process to set offset to anywhere)
+    
+    - We can set the offset past the end of file
+        
+        ![Screenshot 2024-05-25 at 5.58.12 PM.png](https://prod-files-secure.s3.us-west-2.amazonaws.com/d05bbc56-e21c-47d8-b807-9362ccfd7522/3a483788-1c07-4a88-a978-8599248b6de7/Screenshot_2024-05-25_at_5.58.12_PM.png)
+        
+    - Sparse file, we allocate the data structure to the corresponding block number
+    - If user accesses NIL pointers within gap, return zeros as content, waste of space, kernel might lie saying there is no more space, even though the gap is just zeroes
+    
+    FFS Locality Heuristics
+    
+    - Sequential access is faster
+    - Place related things together (same block group)
+        - Each file’s data metadata is allocated in the same block group
+        - Files within the same directory
+    - Place unrelated things into different groups
+        - Different dirs and files from different dirs
+    - Now we have different block levels, each block group tracks their individual free space bitmap, inodes, and data blocks
+    - How do we deal with large files (GB)?
+        - Exceptions for large files, we spread the data to different block groups to not flood smaller files
+            
+            
+
+NTFS: New Technology File System
+
+- Master file table
+    - Entries for file record (like an inode)
+        - 1 KB sized record
+        - First half of record includes metadata
+        - Small data can live (resident) within the record itself
+        - If doesn’t fit, store data extents to keep track of data
+        - If that isn’t enough, then store doubly pointer to record of record pointing to extents
+
 <!-->Week 8 Part 2 <-->
+Filesys operations
+
+- Create, read, write
+    - inodes (inodetable)
+    - bitmap
+    - data blocks
+- When we create a new file (updating multiple structures)
+    - Allocate a new inode (inode bitmap), write new inode into inodetable
+    - Data block of the parent directory, new directory entry
+    - Update parent’s inode with size (modification time)
+- Write to the new file:
+    - Allocate data block (changes to the data bitmap)
+    - Update the file’s inode to track the newly allocated data (new extent)
+    - Write to the data blocks!
+
+Filesys = inode cache, block cache (bio.c)
+
+- fs operations will operate on cached blocks
+- with modification, when to synchronize?
+    - Write through cache: changes immediately persist on disk
+        - Makes every fs op persistent upon return
+        - Problem: can’t buffer updates to frequently modified blocks
+        - Slow, data not all persisted
+    
+    The fs ops above does not happen, instead, by default we give control to application
+    
+    - Only persisted upon a user request
+    - Sync: flushes all cached (dirty) blocks to disk
+    - fsync(fd): flush cached blocks related to a specific file (fd)
+        - If a new file needs to fsync parent dir yourself
+    - By default, kernel periodically flushes all cached pages (10-30s)
+        
+        
+
+Crash Consistency
+
+- Upon fsync we issue disk writes
+    - inode, data bitmap, data block (different disk writes)
+    - Reorders the the request (could be data bitmap, data block, then inode)
+    - Completion means interrupt by disk IO
+- What if we crash before all requests are completed… (before fsync returns)
+    - Maybe no writes made it to disk → nothing changes! (OK)
+    - Only data bitmap is written → data block leak, inconsistency in fs metadata (NOT OK)
+        - Inconsistent in the filesystem’s metadata (bitmap)
+- What if only the file inode is written? (NOT OK)
+    - New data layout (tracking new data block)
+    - When user trying to read the inode, will see garbage
+    - The data bitmap thinks its free, we could have an information leak as an inode could hijack data from another inode that already alloc’d the “free” data blocks
+- What if only the data block is written? (OK)
+    - inode doesn’t know that the data exists, fs metadata is consistent
+
+Resolving inconsistency
+
+- The file system checker (fsck)
+- We have superblock: metadata for fs
+    - Should tell us where to find the inodetable, and the bitmaps
+    - bitmap vs inodes correction
+        - If bitmap not allocated yet it is referenced by an inode, then we just go ahead and allocate (mark) it, even if it is just garbage data
+        - If the bitmap is allocated, but no inodes reference this data block, then no pointer points to it, mark it as un-allocated (unmark)
+- fsck
+    - Also cares about fs namespace
+    - Because user can only find files through the path, what happens when inode exists in memory, but no pointers to it? Remember, kernel has access to all files in the inodetable
+    - What if we write to all structures (inodetable, block bitmap), but we fail to update the parent directory’s data block to reflect the new inode because of a crash?
+    - Scans through each directory’s dir entry to see if all allocated inodes are referenced (if there is a path to the inode), if no pointers to inode, then:
+    - Put file in lost and found folder
+    - Maybe to reduce overhead, completely avoid inconsistency
+    - We are directly writing changes to their actual locations
+    - Maybe we would like to group these writes as an atomic unit
+
+Transaction: group arbitrary number of updates into a single atomic unit
+
+- tx_begin, tx_write(b1), tx_write(b2), … , tx_commit
+- Journaling/WAL
+    - Reserve log space
+    - Write the transaction to the log first, then apply the transaction to their actual location
+    - If we crash, then upon recovery, we know that the tx log is persisted, then just continue the transaction
+    - Downside: write twice, once to the log and once to the actual location, suffer performance loss
+
 <!-->Week 8 Part 3 <-->
